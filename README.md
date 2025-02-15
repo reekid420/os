@@ -48,7 +48,7 @@ sudo pacman -S gcc-multilib nasm make qemu binutils
 
 1. Clone the repository:
 ```bash
-git clone [your-repo-url]
+git clone https://github.com/reekid420/os.git
 cd os
 ```
 
@@ -115,14 +115,6 @@ See [roadmap.txt](roadmap.txt) for detailed development phases and progress.
 ## 🤝 Contributing
 
 Contributions are welcome! Please read our contributing guidelines before submitting pull requests.
-
-## 📝 Code Quality Metrics
-
-- Total Files: 30
-- Total Lines: 938
-- C Files: 9 (602 lines)
-- Header Files: 12 (336 lines)
-- No severe length issues or duplicate functions
 
 ## ⚖ License
 
