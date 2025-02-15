@@ -1,0 +1,382 @@
+{
+  "version": "0.3",
+  "project": {
+    "name": "Custom x86 Operating System",
+    "description": "A bare metal operating system implementation with bootloader and kernel",
+    "architecture": "x86 (32-bit)",
+    "type": "Operating System",
+    "language": ["Assembly", "C"],
+    "build_system": "Make",
+    "metrics": {
+      "total_files": 30,
+      "total_lines": 938,
+      "files_by_type": {
+        "c": {
+          "count": 9,
+          "lines": 602
+        },
+        "h": {
+          "count": 12,
+          "lines": 336
+        }
+      },
+      "code_quality": {
+        "severe_length_issues": 0,
+        "critical_length_issues": 0,
+        "length_warnings": 0,
+        "duplicate_functions": 0
+      },
+      "last_updated": "February 15, 2025 at 03:26 PM"
+    },
+    "roadmap": {
+      "current_phase": "Phase 1: Core Kernel Infrastructure",
+      "completed_features": [
+        "Physical Memory Management",
+        "Virtual Memory Management",
+        "Basic VGA Driver",
+        "GDT Implementation"
+      ],
+      "current_focus": [
+        "TSS Setup",
+        "IDT Implementation",
+        "Exception Handlers"
+      ],
+      "next_steps": [
+        "Implement TSS setup",
+        "Create exception handlers",
+        "Add exception handlers to IDT"
+      ]
+    }
+  },
+  "directory_structure": {
+    "root": {
+      "description": "Project root directory containing build configuration and main files",
+      "files": {
+        "Focus.md": {
+          "type": "Documentation",
+          "purpose": "Project tracking and information",
+          "description": "Contains project structure, metrics, and development guidelines"
+        },
+        "Makefile": {
+          "type": "Build Configuration",
+          "purpose": "Manages build process and compilation flags",
+          "description": "Configures compilation for both assembly and C components, sets up proper flags for bare metal development",
+          "key_features": [
+            "Cross-compilation setup",
+            "Assembly and C compilation rules",
+            "QEMU integration for testing",
+            "Clean build support"
+          ]
+        },
+        "link.ld": {
+          "type": "Linker Script",
+          "purpose": "Defines memory layout for the kernel",
+          "description": "Specifies how different sections of the kernel should be arranged in memory, starting at 1MB mark",
+          "key_sections": [
+            "text - Contains code",
+            "rodata - Read-only data",
+            "data - Initialized variables",
+            "bss - Uninitialized variables"
+          ]
+        },
+        "roadmap.txt": "Development roadmap",
+        "os.bin": "Output binary"
+      }
+    },
+    "src": {
+      "description": "Source code directory containing kernel and bootloader implementation",
+      "files": {
+        "boot.asm": {
+          "type": "Assembly",
+          "purpose": "Bootloader implementation",
+          "description": "Multiboot-compliant bootloader that initializes the system and transfers control to the kernel",
+          "key_features": [
+            "Multiboot header setup",
+            "Stack initialization",
+            "Kernel entry point handling",
+            "IDT setup"
+          ]
+        },
+        "kernel.c": {
+          "type": "C Source",
+          "purpose": "Main kernel implementation",
+          "description": "Basic kernel with VGA text mode support and memory management",
+          "key_functions": [
+            "vga_entry_color",
+            "vga_entry",
+            "terminal_initialize",
+            "terminal_putentryat",
+            "terminal_putchar",
+            "terminal_writestring",
+            "kernel_main",
+            "init_pmm"
+          ],
+          "components": {
+            "VGA_Driver": {
+              "description": "Handles text mode display output",
+              "features": [
+                "Color support",
+                "Character writing",
+                "Screen clearing",
+                "Cursor management"
+              ]
+            },
+            "Memory_Management": {
+              "description": "Physical memory management",
+              "features": [
+                "Page structure",
+                "Reference counting",
+                "Physical memory initialization"
+              ]
+            }
+          }
+        },
+        "cpu": {
+          "files": {
+            "gdt.c": {
+              "lines": 47,
+              "key_functions": [
+                "gdt_set_gate",
+                "init_gdt"
+              ]
+            },
+            "idt.c": {
+              "lines": 60,
+              "key_functions": [
+                "init_idt",
+                "idt_set_gate"
+              ]
+            },
+            "isr.c": {
+              "lines": 52,
+              "key_functions": [
+                "isr_handler"
+              ]
+            },
+            "tss.c": {
+              "lines": 35,
+              "key_functions": [
+                "init_tss",
+                "tss_set_stack"
+              ]
+            }
+          }
+        },
+        "mm": {
+          "files": {
+            "pmm.c": {
+              "lines": 115,
+              "key_functions": [
+                "addr_to_page_idx",
+                "page_idx_to_addr",
+                "init_pmm",
+                "pmm_alloc_page",
+                "pmm_free_page",
+                "pmm_get_free_pages"
+              ]
+            },
+            "vmm.c": {
+              "lines": 110,
+              "key_functions": [
+                "virtual_to_dir_index",
+                "virtual_to_table_index",
+                "init_vmm",
+                "map_page",
+                "unmap_page",
+                "get_physical_address",
+                "switch_page_directory",
+                "enable_paging"
+              ]
+            }
+          }
+        },
+        "include": {
+          "files": {
+            "gdt.h": "GDT definitions",
+            "mm.h": "Memory management definitions",
+            "vmm.h": "Virtual memory definitions",
+            "multiboot.h": "Multiboot structures",
+            "stdbool.h": "Boolean types",
+            "stddef.h": "Standard definitions",
+            "stdint.h": "Integer types"
+          }
+        },
+        "drivers": {
+          "files": {
+            "vga.c": {
+              "lines": 93,
+              "key_functions": [
+                "vga_entry_color",
+                "vga_entry",
+                "terminal_initialize",
+                "terminal_putentryat",
+                "terminal_putchar",
+                "terminal_writestring",
+                "itoa"
+              ]
+            }
+          }
+        },
+        "lib": {
+          "files": {
+            "string.c": {
+              "lines": 16,
+              "key_functions": [
+                "memset",
+                "memcpy"
+              ]
+            }
+          }
+        }
+      },
+      "drivers": {
+        "description": "Device drivers directory",
+        "files": {
+          "vga.h": {
+            "type": "C Header",
+            "purpose": "VGA driver interface",
+            "description": "Defines VGA text mode constants and functions",
+            "key_functions": [
+              "init_vga",
+              "putchar",
+              "puts"
+            ]
+          }
+        }
+      },
+      "include": {
+        "description": "Custom header files for bare metal development",
+        "files": {
+          "stddef.h": {
+            "type": "C Header",
+            "purpose": "Basic type definitions",
+            "description": "Provides fundamental types like size_t for bare metal environment"
+          },
+          "stdint.h": {
+            "type": "C Header",
+            "purpose": "Integer type definitions",
+            "description": "Defines fixed-width integer types for platform independence"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "bootloader": {
+      "entry_point": "start (in boot.asm)",
+      "responsibility": "System initialization and kernel loading",
+      "key_functions": [
+        "Multiboot header setup",
+        "Stack initialization",
+        "Kernel jumping"
+      ],
+      "dependencies": [],
+      "error_states": [
+        "Hardware initialization failure",
+        "Invalid memory state"
+      ]
+    },
+    "kernel": {
+      "entry_point": "kernel_main (in kernel.c)",
+      "responsibility": "Core OS functionality",
+      "subcomponents": {
+        "vga_driver": {
+          "responsibility": "Screen output management",
+          "functions": {
+            "terminal_initialize": "Initializes VGA text mode display",
+            "terminal_putchar": "Writes single character to screen",
+            "terminal_writestring": "Writes string to screen",
+            "terminal_putentryat": "Places character at specific position"
+          },
+          "state": {
+            "terminal_row": "Current cursor row position",
+            "terminal_column": "Current cursor column position",
+            "terminal_color": "Current text color",
+            "terminal_buffer": "Pointer to VGA memory"
+          }
+        }
+      }
+    }
+  },
+  "build_process": {
+    "tools": {
+      "assembler": "nasm",
+      "compiler": "gcc",
+      "linker": "ld"
+    },
+    "flags": {
+      "assembly": "-f elf32",
+      "c_compiler": "-m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs",
+      "linker": "-m elf_i386"
+    },
+    "outputs": {
+      "final_binary": "os.bin",
+      "intermediate": {
+        "boot": "build/boot.o",
+        "kernel": "build/kernel.o"
+      }
+    }
+  },
+  "testing": {
+    "emulator": "QEMU",
+    "command": "qemu-system-i386 -kernel os.bin",
+    "supported_features": [
+      "Text mode output",
+      "Basic kernel functionality"
+    ]
+  },
+  "memory_map": {
+    "kernel_start": "1MB",
+    "vga_buffer": "0xB8000",
+    "sections": {
+      "text": "Code section",
+      "rodata": "Read-only data",
+      "data": "Initialized variables",
+      "bss": "Uninitialized variables"
+    }
+  },
+  "development_guidelines": {
+    "principles": [
+      "Keep code modular and reusable",
+      "Follow best practices for the project type",
+      "Maintain clean separation of concerns"
+    ]
+  },
+  "development_status": {
+    "completed": [
+      "Physical Memory Management",
+      "Virtual Memory Management",
+      "Paging Implementation",
+      "GDT Setup",
+      "Basic VGA Driver",
+      "TSS Implementation"
+    ],
+    "in_progress": [
+      "IDT Setup",
+      "Exception Handler System"
+    ],
+    "planned": [
+      "PIC Configuration",
+      "Keyboard Driver",
+      "Timer Implementation",
+      "Process Management",
+      "Enhanced VGA Driver"
+    ]
+  },
+  "key_components": {
+    "memory_management": {
+      "status": "Complete",
+      "features": [
+        "Physical page allocation",
+        "Virtual memory mapping",
+        "Page directory management"
+      ]
+    },
+    "cpu_features": {
+      "status": "In Progress",
+      "completed": ["GDT"],
+      "in_progress": ["TSS", "IDT"],
+      "pending": ["PIC"]
+    }
+  }
+} 

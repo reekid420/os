@@ -1,0 +1,91 @@
+# OS Development Roadmap
+
+## Phase 1: Core Kernel Infrastructure
+### Memory Management [COMPLETED]
+- [x] Basic page structure
+- [x] Physical memory manager (PMM)
+- [x] Virtual memory manager (VMM)
+- [ ] Heap allocator
+
+### CPU Setup [IN PROGRESS]
+- [x] GDT (Global Descriptor Table)
+- [x] TSS (Task State Segment)
+- [x] Basic IDT setup
+- [x] Exception handlers (ISRs 0-31)
+- [ ] IRQ handlers [NEXT]
+  - [ ] PIC initialization
+  - [ ] Timer (PIT)
+  - [ ] Keyboard
+
+## Phase 2: Hardware Support [PENDING]
+### Device Drivers
+- [x] Basic VGA driver
+- [ ] Enhanced VGA driver
+- [ ] Keyboard driver
+- [ ] Timer driver
+
+### Storage
+- [ ] ATA/IDE driver
+- [ ] Basic filesystem
+  - [ ] File operations
+  - [ ] Directory structure
+
+## Phase 3: Process Management
+### Task Management
+- [ ] Process structures
+- [ ] Task switching
+- [ ] Scheduler
+  - [ ] Round-robin scheduling
+  - [ ] Priority scheduling
+- [ ] User mode support
+
+### Memory Protection
+- [ ] User/kernel space separation
+- [ ] Process isolation
+- [ ] Access control
+
+## Phase 4: System Services
+### System Calls
+- [ ] Syscall interface
+- [ ] Basic system services
+  - [ ] Process creation
+  - [ ] Memory management
+  - [ ] File operations
+
+### IPC (Inter-Process Communication)
+- [ ] Message passing
+- [ ] Shared memory
+- [ ] Semaphores
+
+## Phase 5: User Space
+### Standard Library
+- [ ] Basic libc implementation
+- [ ] System call wrappers
+- [ ] String operations
+- [ ] Memory functions
+
+### Shell
+- [ ] Command interpreter
+- [ ] Basic commands
+- [ ] File operations
+
+## Phase 6: Advanced Features
+### Networking
+- [ ] Network stack
+- [ ] Basic protocols
+- [ ] Network drivers
+
+### Multi-core Support
+- [ ] SMP initialization
+- [ ] Core synchronization
+- [ ] Load balancing
+
+## Current Focus
+- Setting up TSS
+- Completing IDT implementation
+- Implementing exception handlers
+
+## Next Steps
+1. Implement TSS setup
+2. Create exception handlers
+3. Add exception handlers to IDT
