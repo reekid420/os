@@ -1,0 +1,9 @@
+# Ignore context and rules files
+.cursorcontext.json
+.cursorrules
+
+# Ignore project focus documentation
+Focus.md
+
+# Ignore build directory
+build/ 
