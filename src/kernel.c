@@ -7,6 +7,8 @@
 #include "include/tss.h"
 #include "include/idt.h"
 #include "include/vga.h"
+#include "include/heap.h"
+#include "include/string.h"
 
 void test_tss(void) {
     terminal_writestring("Testing TSS...\n");
@@ -23,6 +25,72 @@ void test_tss(void) {
     // Test stack switching
     tss_set_stack(0x10, kernel_stack + 0x1000);
     terminal_writestring("TSS stack switch test completed.\n");
+}
+
+void test_heap(void) {
+    terminal_writestring("\nTesting heap allocator...\n");
+    
+    // Test basic allocation
+    char* str = (char*)kmalloc(32);
+    if (str) {
+        terminal_writestring("Successfully allocated 32 bytes\n");
+        memset(str, 'A', 31);
+        str[31] = '\0';
+        terminal_writestring("Writing to allocated memory: ");
+        terminal_writestring(str);
+        terminal_writestring("\n");
+        kfree(str);
+        terminal_writestring("Memory freed successfully\n");
+    }
+    
+    // Test array allocation and zeroing
+    int* numbers = (int*)kcalloc(5, sizeof(int));
+    if (numbers) {
+        terminal_writestring("Successfully allocated and zeroed array\n");
+        // Verify zeroing
+        int is_zeroed = 1;
+        for (int i = 0; i < 5; i++) {
+            if (numbers[i] != 0) {
+                is_zeroed = 0;
+                break;
+            }
+        }
+        if (is_zeroed) {
+            terminal_writestring("Array correctly zeroed\n");
+        }
+        kfree(numbers);
+    }
+    
+    // Test reallocation
+    char* dynamic = (char*)kmalloc(16);
+    if (dynamic) {
+        terminal_writestring("Testing reallocation...\n");
+        memset(dynamic, 'B', 15);
+        dynamic[15] = '\0';
+        
+        dynamic = (char*)krealloc(dynamic, 32);
+        if (dynamic) {
+            terminal_writestring("Successfully reallocated to 32 bytes\n");
+            dynamic[31] = '\0';
+            kfree(dynamic);
+        }
+    }
+    
+    // Print heap statistics
+    char buf[32];
+    size_t free_mem = kheap_free_memory();
+    size_t used_mem = kheap_used_memory();
+    
+    terminal_writestring("\nHeap statistics:\n");
+    terminal_writestring("Free memory: ");
+    itoa(free_mem, buf);
+    terminal_writestring(buf);
+    terminal_writestring(" bytes\n");
+    
+    terminal_writestring("Used memory: ");
+    itoa(used_mem, buf);
+    terminal_writestring(buf);
+    terminal_writestring(" bytes\n");
 }
 
 void kernel_main(void) {
@@ -52,6 +120,11 @@ void kernel_main(void) {
     enable_paging();
     terminal_writestring("Paging enabled successfully!\n");
     
+    // Initialize heap after paging is enabled
+    terminal_writestring("\nInitializing heap allocator...\n");
+    init_heap();
+    terminal_writestring("Heap initialized successfully!\n");
+    
     // Test virtual memory
     void* virtual_addr = (void*)0x400000;  // 4MB
     void* physical = pmm_alloc_page();
@@ -69,6 +142,11 @@ void kernel_main(void) {
         pmm_free_page(physical);
     }
 
-    terminal_writestring("Testing CPU features:\n");
+    terminal_writestring("\nTesting CPU features:\n");
     test_tss();
+    
+    // Test heap allocator
+    test_heap();
+    
+    terminal_writestring("\nAll tests completed!\n");
 } 
