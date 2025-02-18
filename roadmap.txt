@@ -5,15 +5,15 @@
 - [x] Basic page structure
 - [x] Physical memory manager (PMM)
 - [x] Virtual memory manager (VMM)
-- [ ] Heap allocator
+- [x] Heap allocator
 
 ### CPU Setup [IN PROGRESS]
 - [x] GDT (Global Descriptor Table)
 - [x] TSS (Task State Segment)
 - [x] Basic IDT setup
 - [x] Exception handlers (ISRs 0-31)
-- [ ] IRQ handlers [NEXT]
-  - [ ] PIC initialization
+- [x] IRQ handlers
+  - [ ] PIC initialization [NEXT]
   - [ ] Timer (PIT)
   - [ ] Keyboard
 

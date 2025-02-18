@@ -6,6 +6,8 @@
 #include "include/gdt.h"
 #include "include/tss.h"
 #include "include/idt.h"
+#include "include/isr.h"
+#include "include/pic.h"
 #include "include/vga.h"
 #include "include/heap.h"
 #include "include/string.h"
@@ -93,6 +95,20 @@ void test_heap(void) {
     terminal_writestring(" bytes\n");
 }
 
+// Test interrupt handling
+void test_interrupts(void) {
+    terminal_writestring("\nTesting interrupt handling...\n");
+    
+    // Test division by zero (ISR 0)
+    terminal_writestring("Testing division by zero exception...\n");
+    int a = 10;
+    int b = 0;
+    int c = a / b;  // This should trigger an exception
+    
+    // We should never reach here
+    terminal_writestring("Failed: Division by zero didn't cause exception!\n");
+}
+
 void kernel_main(void) {
     terminal_initialize();
     terminal_writestring("Welcome to your custom OS!\n");
@@ -104,6 +120,10 @@ void kernel_main(void) {
     terminal_writestring("Initializing IDT...\n");
     init_idt();
     terminal_writestring("IDT initialized!\n\n");
+    
+    terminal_writestring("Initializing interrupt handlers...\n");
+    init_interrupt_handlers();
+    terminal_writestring("Interrupt handlers initialized!\n\n");
     
     terminal_writestring("Initializing physical memory manager...\n");
     extern multiboot_info_t* multiboot_info;
@@ -148,5 +168,16 @@ void kernel_main(void) {
     // Test heap allocator
     test_heap();
     
+    // Test interrupts (this will halt the system due to division by zero)
+    test_interrupts();
+    
     terminal_writestring("\nAll tests completed!\n");
+    
+    // Enable interrupts
+    asm volatile("sti");
+    
+    // Main loop
+    for(;;) {
+        asm volatile("hlt");  // Halt until next interrupt
+    }
 } 
