@@ -1,6 +1,6 @@
 # OS Development Roadmap
 
-## Phase 1: Core Kernel Infrastructure
+## Phase 1: Core Kernel Infrastructure [IN PROGRESS]
 ### Memory Management [COMPLETED]
 - [x] Basic page structure
 - [x] Physical memory manager (PMM)
@@ -14,23 +14,42 @@
 - [x] Exception handlers (ISRs 0-31)
 - [x] IRQ handlers
   - [x] PIC initialization
-  - [ ] Timer (PIT) [NEXT]
-  - [ ] Keyboard
+  - [x] Timer (PIT) implementation in Rust
+  - [ ] Keyboard interrupt handler
+    - [ ] IRQ1 setup
+    - [ ] Basic scancode handling
+    - [ ] Integration with VGA driver
 
-## Phase 2: Hardware Support [PENDING]
+## Phase 2: Hardware Integration [IN PROGRESS]
 ### Device Drivers
 - [x] Basic VGA driver
+- [x] Timer driver (Hybrid Rust/C implementation)
+  - [x] 100Hz system timer
+  - [x] Tick counting
+  - [x] Time display (HH:MM:SS)
+  - [x] VGA status line updates
 - [ ] Enhanced VGA driver
+  - [ ] Scrolling support
+  - [ ] Cursor management
+  - [ ] Color schemes
 - [ ] Keyboard driver
-- [ ] Timer driver
+  - [ ] Interrupt handling
+  - [ ] Scancode translation
+  - [ ] Key event system
 
-### Storage
+### Rust Integration
+- [x] Basic Rust support
+- [x] Timer implementation
+- [ ] Additional device drivers
+- [ ] Hardware abstractions
+
+### Storage [PLANNED]
 - [ ] ATA/IDE driver
 - [ ] Basic filesystem
   - [ ] File operations
   - [ ] Directory structure
 
-## Phase 3: Process Management
+## Phase 3: Process Management [PLANNED]
 ### Task Management
 - [ ] Process structures
 - [ ] Task switching
@@ -44,7 +63,7 @@
 - [ ] Process isolation
 - [ ] Access control
 
-## Phase 4: System Services
+## Phase 4: System Services [PLANNED]
 ### System Calls
 - [ ] Syscall interface
 - [ ] Basic system services
@@ -57,19 +76,19 @@
 - [ ] Shared memory
 - [ ] Semaphores
 
-## Phase 5: User Space
+## Phase 5: User Space [PLANNED]
 ### Standard Library
-- [ ] Basic libc implementation
+- [x] Basic string operations
+- [x] Memory functions
+- [ ] Extended libc implementation
 - [ ] System call wrappers
-- [ ] String operations
-- [ ] Memory functions
 
 ### Shell
 - [ ] Command interpreter
 - [ ] Basic commands
 - [ ] File operations
 
-## Phase 6: Advanced Features
+## Phase 6: Advanced Features [PLANNED]
 ### Networking
 - [ ] Network stack
 - [ ] Basic protocols
@@ -81,11 +100,18 @@
 - [ ] Load balancing
 
 ## Current Focus
-- Implementing PIT (Programmable Interval Timer)
-- Setting up timer interrupts
-- Preparing for keyboard input
+1. Hardware Interrupt System
+   - Refining interrupt handling
+   - Implementing remaining IRQ handlers
+2. Rust Integration
+   - Expanding Rust component usage
+   - Creating hardware abstractions
+3. Device Drivers
+   - Keyboard driver implementation
+   - Enhanced VGA driver features
 
 ## Next Steps
-1. Implement PIT initialization and configuration
-2. Set up timer interrupt handler
-3. Add keyboard interrupt support
+1. Implement keyboard interrupt handler
+2. Develop enhanced VGA driver features
+3. Begin process management implementation
+4. Expand Rust integration to more components
