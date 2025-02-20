@@ -13,8 +13,8 @@
 - [x] Basic IDT setup
 - [x] Exception handlers (ISRs 0-31)
 - [x] IRQ handlers
-  - [ ] PIC initialization [NEXT]
-  - [ ] Timer (PIT)
+  - [x] PIC initialization
+  - [ ] Timer (PIT) [NEXT]
   - [ ] Keyboard
 
 ## Phase 2: Hardware Support [PENDING]
@@ -81,11 +81,11 @@
 - [ ] Load balancing
 
 ## Current Focus
-- Setting up TSS
-- Completing IDT implementation
-- Implementing exception handlers
+- Implementing PIT (Programmable Interval Timer)
+- Setting up timer interrupts
+- Preparing for keyboard input
 
 ## Next Steps
-1. Implement TSS setup
-2. Create exception handlers
-3. Add exception handlers to IDT
+1. Implement PIT initialization and configuration
+2. Set up timer interrupt handler
+3. Add keyboard interrupt support

@@ -2,6 +2,7 @@
 #include "../include/idt.h"
 #include "../include/pic.h"
 #include "../include/vga.h"
+#include "../include/string.h"
 
 // Array of interrupt handlers
 static isr_t interrupt_handlers[256];
@@ -45,13 +46,25 @@ const char *exception_messages[] = {
 // Handle CPU exceptions
 void isr_handler(registers_t regs) {
     if (regs.int_no < 32) {
-        terminal_writestring("Received interrupt: ");
-        char s[3];
+        terminal_writestring("\nEXCEPTION: ");
+        char s[32];
         itoa(regs.int_no, s);
         terminal_writestring(s);
-        terminal_writestring("\n");
+        terminal_writestring(" (");
         terminal_writestring(exception_messages[regs.int_no]);
-        terminal_writestring("\n");
+        terminal_writestring(")\n");
+        
+        // Print more debug info for serious errors
+        if (regs.int_no == 8 || regs.int_no == 13 || regs.int_no == 14) {
+            terminal_writestring("Error code: ");
+            itoa(regs.err_code, s);
+            terminal_writestring(s);
+            terminal_writestring("\nEIP: ");
+            itoa(regs.eip, s);
+            terminal_writestring(s);
+            terminal_writestring("\n");
+        }
+        
         for(;;); // Halt the system
     }
     

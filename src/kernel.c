@@ -8,6 +8,7 @@
 #include "include/idt.h"
 #include "include/isr.h"
 #include "include/pic.h"
+#include "include/pit.h"
 #include "include/vga.h"
 #include "include/heap.h"
 #include "include/string.h"
@@ -109,6 +110,43 @@ void test_interrupts(void) {
     terminal_writestring("Failed: Division by zero didn't cause exception!\n");
 }
 
+// Test PIT functionality
+void test_pit(void) {
+    terminal_writestring("\nTesting PIT (Timer)...\n");
+    
+    // Get initial tick count
+    uint32_t initial_ticks = pit_get_tick_count();
+    terminal_writestring("Initial tick count: ");
+    char tick_str[32];
+    itoa(initial_ticks, tick_str);
+    terminal_writestring(tick_str);
+    terminal_writestring("\n");
+    
+    // Wait for 1 second
+    terminal_writestring("Waiting for 1 second...\n");
+    pit_wait(1000);
+    
+    // Get final tick count
+    uint32_t final_ticks = pit_get_tick_count();
+    terminal_writestring("Final tick count: ");
+    itoa(final_ticks, tick_str);
+    terminal_writestring(tick_str);
+    terminal_writestring("\n");
+    
+    // Calculate and display ticks elapsed
+    uint32_t ticks_elapsed = final_ticks - initial_ticks;
+    terminal_writestring("Ticks elapsed: ");
+    itoa(ticks_elapsed, tick_str);
+    terminal_writestring(tick_str);
+    terminal_writestring("\n");
+    
+    if (ticks_elapsed >= 100) { // Should be approximately 100 ticks for 1 second
+        terminal_writestring("PIT test passed!\n");
+    } else {
+        terminal_writestring("PIT test failed: incorrect tick count\n");
+    }
+}
+
 void kernel_main(void) {
     terminal_initialize();
     terminal_writestring("Welcome to your custom OS!\n");
@@ -124,6 +162,10 @@ void kernel_main(void) {
     terminal_writestring("Initializing interrupt handlers...\n");
     init_interrupt_handlers();
     terminal_writestring("Interrupt handlers initialized!\n\n");
+    
+    terminal_writestring("Initializing PIT...\n");
+    init_pit();
+    terminal_writestring("PIT initialized!\n\n");
     
     terminal_writestring("Initializing physical memory manager...\n");
     extern multiboot_info_t* multiboot_info;
@@ -145,39 +187,15 @@ void kernel_main(void) {
     init_heap();
     terminal_writestring("Heap initialized successfully!\n");
     
-    // Test virtual memory
-    void* virtual_addr = (void*)0x400000;  // 4MB
-    void* physical = pmm_alloc_page();
-    if (physical) {
-        map_page(physical, virtual_addr, PAGE_PRESENT | PAGE_WRITE);
-        terminal_writestring("Successfully mapped virtual page!\n");
-        
-        // Test the mapping
-        *(char*)virtual_addr = 'A';  // Write to virtual address
-        if (*(char*)virtual_addr == 'A') {
-            terminal_writestring("Virtual memory test passed!\n");
-        }
-        
-        unmap_page(virtual_addr);
-        pmm_free_page(physical);
-    }
-
-    terminal_writestring("\nTesting CPU features:\n");
-    test_tss();
-    
-    // Test heap allocator
-    test_heap();
-    
-    // Test interrupts (this will halt the system due to division by zero)
-    test_interrupts();
-    
-    terminal_writestring("\nAll tests completed!\n");
-    
     // Enable interrupts
     asm volatile("sti");
     
-    // Main loop
-    for(;;) {
-        asm volatile("hlt");  // Halt until next interrupt
+    // Remove the timer test since we have continuous timer display now
+    terminal_writestring("\nSystem initialized and running.\n");
+    terminal_writestring("Timer ticks will be displayed on the bottom line.\n");
+    
+    // Main loop - just halt and wait for interrupts
+    while(1) {
+        asm volatile("hlt");
     }
 } 

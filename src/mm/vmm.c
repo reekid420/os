@@ -97,12 +97,24 @@ void switch_page_directory(page_directory_t* dir) {
 }
 
 void enable_paging(void) {
-    // Identity map the first 4MB (or however much kernel needs)
-    for (uint32_t i = 0; i < 1024; i++) {
+    // Identity map the first 16MB for kernel space
+    for (uint32_t i = 0; i < 4096; i++) {  // 4096 pages = 16MB
         void* phys = (void*)(i * 4096);
         void* virt = phys;  // Identity mapping
         map_page(phys, virt, PAGE_PRESENT | PAGE_WRITE);
     }
+    
+    // Map additional 16MB for heap (starting at 16MB)
+    for (uint32_t i = 0; i < 4096; i++) {
+        void* phys = (void*)((4096 + i) * 4096);  // Start after kernel space
+        void* virt = phys;
+        map_page(phys, virt, PAGE_PRESENT | PAGE_WRITE);
+    }
+    
+    // Map VGA buffer
+    void* vga_phys = (void*)0xB8000;
+    void* vga_virt = (void*)0xB8000;
+    map_page(vga_phys, vga_virt, PAGE_PRESENT | PAGE_WRITE);
     
     // Load page directory and enable paging
     switch_page_directory(current_directory);

@@ -1,10 +1,45 @@
-# Ignore context and rules files
+# IDE and editor files
 .cursorcontext.json
 .cursorrules
+.vscode/
+.idea/
+*.swp
+*~
 
-# Ignore project focus documentation
+# Project documentation
 Focus.md
+TODO.md
+NOTES.md
 
-# Ignore build stuff
-build/ 
+# Build directories and artifacts
+build/
+target/
 os.bin
+*.o
+*.a
+*.so
+*.elf
+*.img
+*.iso
+
+# Debug and log files
+*.log
+debug-full.log
+debug.log
+serial.log
+debugcon.log
+
+# Rust specific
+Cargo.lock
+**/*.rs.bk
+**/*.rs.fmt
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
+
+# OS specific
+.DS_Store
+.directory
+Thumbs.db

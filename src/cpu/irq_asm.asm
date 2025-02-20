@@ -21,12 +21,14 @@ extern irq_handler
 
 ; Common IRQ stub that calls C handler
 irq_common_stub:
-    pusha           ; Push all registers
+    pusha                   ; Push all registers
     
-    mov ax, ds      ; Save data segment
-    push eax
+    push ds                 ; Save segment registers
+    push es
+    push fs
+    push gs
     
-    mov ax, 0x10    ; Load kernel data segment
+    mov ax, 0x10           ; Load kernel data segment
     mov ds, ax
     mov es, ax
     mov fs, ax
@@ -34,16 +36,14 @@ irq_common_stub:
     
     call irq_handler
     
-    pop ebx         ; Restore original data segment
-    mov ds, bx
-    mov es, bx
-    mov fs, bx
-    mov gs, bx
+    pop gs                  ; Restore segment registers in reverse order
+    pop fs
+    pop es
+    pop ds
     
-    popa            ; Restore registers
-    add esp, 8      ; Clean up pushed error code and ISR number
-    sti             ; Re-enable interrupts
-    iret            ; Return from interrupt
+    popa                    ; Restore registers
+    add esp, 8             ; Clean up pushed error code and ISR number
+    iret                   ; Return from interrupt
 
 ; IRQ handlers
 irq0:

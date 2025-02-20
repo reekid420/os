@@ -5,14 +5,17 @@
 static tss_entry_t tss_entry;
 
 void init_tss(uint32_t idx, uint16_t ss0, uint32_t esp0) {
-    // Get the address of the TSS
-    uint32_t base = (uint32_t)&tss_entry;
+    // Get the address of the TSS using uintptr_t for safe pointer-to-integer casting
+    uintptr_t base = (uintptr_t)&tss_entry;
     
     // Add the TSS descriptor to the GDT
     gdt_set_gate(idx, base, base + sizeof(tss_entry_t), 0x89, 0x40);
     
-    // Zero out the TSS
-    memset(&tss_entry, 0, sizeof(tss_entry_t));
+    // Zero out the TSS using explicit size-checked initialization
+    volatile uint8_t* target = (volatile uint8_t*)&tss_entry;
+    for (size_t i = 0; i < sizeof(tss_entry_t); i++) {
+        target[i] = 0;
+    }
     
     // Set up the basic TSS fields
     tss_entry.ss0 = ss0;    // Kernel stack segment
