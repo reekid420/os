@@ -10,6 +10,7 @@
       "developer1": {
         "type": "generator",
         "responsibilities": [
+          "scan memory using code-knowlede mcp tools",
           "analyze_requirements",
           "propose_solutions",
           "implement_changes",

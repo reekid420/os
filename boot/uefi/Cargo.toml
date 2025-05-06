@@ -1,0 +1,10 @@
+[package]
+name = "uefi-bootloader"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+uefi = "0.24.0"
+uefi-services = "0.21.0"
+x86_64 = "0.14.10"
+log = "0.4.20"
