@@ -1,1 +1,6 @@
 target
+logs
+*.log
+Cargo.lock
+.windsurfrules
+.windsurf

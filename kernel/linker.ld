@@ -9,11 +9,12 @@ SECTIONS {
     /* The kernel will be loaded at 1MB (conventional for bootloaders) */
     . = 1M;
 
-    /* DISCRIMINATOR: Validate multiboot header placement */
-    /* Multiboot header must be within the first 8KB of the kernel file */
-    .multiboot_header : ALIGN(4) {
-        /* Place multiboot header at the beginning */
-        KEEP(*(.multiboot_header))
+    /* DISCRIMINATOR: Validate multiboot2 header placement */
+    /* Multiboot2 header must be within the first 8KB of the kernel file */
+    /* CRITICAL: Update to match the new section name in boot.asm */
+    .multiboot2_header : ALIGN(8) {
+        /* Place multiboot header at the beginning with 8-byte alignment */
+        KEEP(*(.multiboot2_header))
     }
 
     /* GENERATOR: Text section implementation */
